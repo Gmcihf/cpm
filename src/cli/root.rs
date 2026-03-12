@@ -1,3 +1,4 @@
+use crate::cli::create;
 use clap::{Parser, Subcommand};
 
 /// Main structure of the CPM command-line interface
@@ -20,8 +21,12 @@ pub struct Cli {
 // Each variant corresponds to a specific command-line operation.
 #[derive(Subcommand)]
 pub enum Commands {
-    /// print "Hello, World!" message
-    Hello,
+    /// Create a new C/C++ project
+    #[command(arg_required_else_help = true)]
+    Create {
+        /// Name of the project to create
+        name: String,
+    },
 }
 
 /// Execute the CLI command
@@ -42,8 +47,12 @@ pub enum Commands {
 /// ```
 impl Cli {
     pub fn run(self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        // Execute the corresponding command based on the user's input
+        use Commands::Create;
         match self.command {
-            Commands::Hello => println!("Hello, World!"),
+            Create { name } => {
+                create::create_project(&name)?;
+            }
         }
         Ok(())
     }
