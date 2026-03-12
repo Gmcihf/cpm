@@ -6,3 +6,6 @@ pub mod config;
 
 ///Auxiliary tools Module
 pub mod utils;
+
+/// General project tools Module
+pub mod core;
