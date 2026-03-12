@@ -1,4 +1,4 @@
-use crate::cli::create;
+use crate::cli::{create, install};
 use clap::{Parser, Subcommand};
 
 /// Main structure of the CPM command-line interface
@@ -27,6 +27,18 @@ pub enum Commands {
         /// Name of the project to create
         name: String,
     },
+
+    /// Install the current C/C++ project with dist structure
+    #[command(arg_required_else_help = false)]
+    Install {
+        /// Package URL or name to install (defaults to current directory for local installation)
+        #[arg(default_value = ".")]
+        url: String,
+
+        /// Install as development dependency (writes to [dev_dependencies])
+        #[arg(short = 'D', long = "dev", default_value = "false")]
+        dev: bool,
+    },
 }
 
 /// Execute the CLI command
@@ -48,10 +60,22 @@ pub enum Commands {
 impl Cli {
     pub fn run(self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         // Execute the corresponding command based on the user's input
-        use Commands::Create;
+        use Commands::{Create, Install};
         match self.command {
             Create { name } => {
                 create::create_project(&name)?;
+            }
+            Install { url, dev } => {
+                // Check if the url is a local directory or a remote packagew
+                if url == "." {
+                    // When the path is set to the default value,
+                    // the function "install_all" (which installs all the dependencies of the current project) will be executed.
+                    install::install_all();
+                } else {
+                    // When the path is not set to the default value,
+                    // the function "install" (which installs the specified package) will be executed.
+                    install::install(&url, dev)?;
+                }
             }
         }
         Ok(())
