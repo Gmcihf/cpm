@@ -6,3 +6,6 @@ pub mod create;
 
 /// INstall dependencies for a project CLI
 pub mod install;
+
+/// Uninstall dependencies for a project CLI
+pub mod uninstall;
