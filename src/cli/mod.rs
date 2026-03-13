@@ -12,3 +12,6 @@ pub mod uninstall;
 
 /// Build C/C++ project CLI
 pub mod build;
+
+/// Run C/C++ executable file CLI
+pub mod run;
