@@ -9,3 +9,6 @@ pub mod utils;
 
 /// General project tools Module
 pub mod core;
+
+/// Compilation, interface definition module
+pub mod builder;
