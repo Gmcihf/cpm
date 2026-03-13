@@ -1,5 +1,6 @@
-use crate::cli::{create, install, uninstall};
+use crate::cli::{build, create, install, uninstall};
 use clap::{Parser, Subcommand};
+use std::env;
 
 /// Main structure of the CPM command-line interface
 #[derive(Parser)]
@@ -47,6 +48,14 @@ pub enum Commands {
         #[arg(default_value = ".")]
         url: String,
     },
+
+    /// Build the current C/C++ project with dist structure
+    #[command(arg_required_else_help = false)]
+    Build {
+        /// Path to the project directory (defaults to current directory)
+        #[arg(default_value = ".")]
+        path: String,
+    },
 }
 
 /// Execute the CLI command
@@ -68,7 +77,7 @@ pub enum Commands {
 impl Cli {
     pub fn run(self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         // Execute the corresponding command based on the user's input
-        use Commands::{Create, Install, Uninstall};
+        use Commands::{Build, Create, Install, Uninstall};
         match self.command {
             Create { name } => {
                 create::create_project(&name)?;
@@ -91,6 +100,18 @@ impl Cli {
                 } else {
                     uninstall::uninstall(&url)?;
                 }
+            }
+            Build { path } => {
+                // Get project root directory path
+                let actual_path = if path == "." {
+                    env::current_dir()
+                        .unwrap_or_else(|_| std::path::PathBuf::from("."))
+                        .to_string_lossy()
+                        .into_owned()
+                } else {
+                    path
+                };
+                build::build_project(&actual_path)?;
             }
         }
         Ok(())
