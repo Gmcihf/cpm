@@ -9,3 +9,6 @@ pub mod install;
 
 /// Uninstall dependencies for a project CLI
 pub mod uninstall;
+
+/// Build C/C++ project CLI
+pub mod build;
