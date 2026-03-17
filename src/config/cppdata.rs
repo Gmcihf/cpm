@@ -50,10 +50,9 @@ authors = ["Your Name <your_email@example.com>"]
 license = "MIT"
 
 [build]
-output = "dist"
+output = "bin"
 compiler = "g++"
 flags = ["-Wall", "-Wextra", "-std=c++17"]
-# 系统级库依赖（如 zlib、pthread 等）
 system_libraries = ["z", "pthread"]
 
 [dependencies]
